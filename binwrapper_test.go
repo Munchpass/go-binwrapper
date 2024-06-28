@@ -40,7 +40,7 @@ func ExampleNewBinWrapper() {
 				Arch("x86").
 				ExecPath("cwebp.exe")).
 		Strip(2).
-		Dest("vendor/cwebp").
+		Dest("test/cwebp").
 		ExecPath("cwebp")
 
 	err := bin.Run("-version")
@@ -79,7 +79,7 @@ func TestNewBinWrapperNoError(t *testing.T) {
 				Os("win32").
 				Arch("x86")).
 		Strip(2).
-		Dest("vendor/cwebp").
+		Dest("test/cwebp").
 		ExecPath("cwebp").AutoExe()
 
 	err := bin.Run("-version")
