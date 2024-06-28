@@ -7,7 +7,6 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"net/http"
 	"net/url"
 	"os"
@@ -34,8 +33,9 @@ type BinWrapper struct {
 	dest     string
 	execPath string
 	strip    int
-	output   []byte
-	autoExe  bool
+	// TODO: why is this not used?
+	// output   []byte
+	autoExe bool
 
 	stdErr       []byte
 	stdOut       []byte
@@ -273,10 +273,10 @@ func (b *BinWrapper) Run(arg ...string) error {
 	}
 
 	if stdout != nil {
-		b.stdOut, _ = ioutil.ReadAll(stdout)
+		b.stdOut, _ = io.ReadAll(stdout)
 	}
 
-	b.stdErr, _ = ioutil.ReadAll(stderr)
+	b.stdErr, _ = io.ReadAll(stderr)
 	err = b.cmd.Wait()
 
 	if ctx.Err() == context.DeadlineExceeded {
@@ -312,7 +312,7 @@ func (b *BinWrapper) download() error {
 	src := osFilterObj(b.src)
 
 	if src == nil {
-		return errors.New("No binary found matching your system. It's probably not supported")
+		return errors.New("no binary found matching your system. It's probably not supported")
 	}
 
 	file, err := b.downloadFile(src.url)
@@ -359,7 +359,7 @@ func (b *BinWrapper) stripDir() error {
 	var dirsToRemove []string
 
 	for i := 0; i < b.strip; i++ {
-		files, err := ioutil.ReadDir(dir)
+		files, err := os.ReadDir(dir)
 
 		if err != nil {
 			return err
@@ -378,7 +378,7 @@ func (b *BinWrapper) stripDir() error {
 		}
 	}
 
-	files, err := ioutil.ReadDir(dir)
+	files, err := os.ReadDir(dir)
 
 	if err != nil {
 		return err
